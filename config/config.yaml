@@ -1,13 +1,15 @@
 # NOTE: 冒号后面必须要有一个空格
 
 # 日志类型: file or stdout
-log-type: 'stdout'
+log-type: 'file'
 
 # 数据库地址
 db-uri: 'root:root@tcp(127.0.0.1:3306)/data-collector?charset=utf8&clientFoundRows=true'
 
 tasks:
   fundcompany:
-    spec: '0 * * * * *'
+    spec: '0 0 22 * * SUN'
     home-page: 'http://fund.eastmoney.com'
     resource-url: 'http://fund.eastmoney.com/company'
+  fund:
+    spec: '0 0 23 * * *'

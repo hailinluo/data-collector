@@ -8,6 +8,7 @@ import (
 	"github.com/hailinluo/data-collector/storage"
 	"github.com/hailinluo/data-collector/task"
 	"github.com/hailinluo/data-collector/task/fund"
+	"github.com/hailinluo/data-collector/task/fundcompany"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -70,15 +71,16 @@ func runServer() error {
 	hub := task.InitTaskHub()
 	defer hub.Close()
 	// 添加任务
-	//fundcompany := fundcompany.NewFcCollector(
-	//	fundcompany.WithSpec(config.Server.Tasks["fundcompany"]["spec"]),
-	//	fundcompany.WithHomePage(config.Server.Tasks["fundcompany"]["home-page"]),
-	//	fundcompany.WithResUrl(config.Server.Tasks["fundcompany"]["resource-url"]),
-	//)
-	//_, err = hub.AddTask(fundcompany)
-	//if err != nil {
-	//	logger.Errorf("add task failed. err: %s", err)
-	//}
+	fundcompany := fundcompany.NewFcCollector(
+		fundcompany.WithSpec(config.Server.Tasks["fundcompany"]["spec"]),
+		fundcompany.WithHomePage(config.Server.Tasks["fundcompany"]["home-page"]),
+		fundcompany.WithResUrl(config.Server.Tasks["fundcompany"]["resource-url"]),
+	)
+	_, err = hub.AddTask(fundcompany)
+	if err != nil {
+		logger.Errorf("add task failed. err: %s", err)
+	}
+
 	fund := fund.NewFundCollector(
 		fund.WithSpec(config.Server.Tasks["fundcompany"]["spec"]),
 	)
@@ -89,19 +91,5 @@ func runServer() error {
 
 	exit := make(chan bool)
 	<-exit
-
-	//g := gin.Default()
-	//gin.SetMode(gin.ReleaseMode)
-	//grp := g.Group("/trigger")
-	//grp.GET("/fund-companies", func(c *gin.Context) {
-	//	c.JSON(200, gin.H{
-	//		"code":    200,
-	//		"message": "OK",
-	//	})
-	//})
-	//if err := g.Run(":8824"); err != nil {
-	//	// TODO log exit
-	//	return err
-	//}
 	return nil
 }
